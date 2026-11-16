@@ -1,7 +1,7 @@
 
 # TaskFlow – Laravel CI/CD Automation on AWS EKS
 
-![TaskFlow Dashboard](taskflow-dashboard.png)
+![TaskFlow Dashboard](taskflow.png)
 
 TaskFlow is a Laravel-based task management application deployed on Amazon EKS using Docker, Jenkins, Amazon ECR, and Kubernetes.
 
