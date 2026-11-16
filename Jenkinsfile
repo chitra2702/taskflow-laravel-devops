@@ -50,5 +50,17 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                    kubectl set image deployment/taskflow \
+                    taskflow=${ECR_URI}:${BUILD_NUMBER}
+
+                    kubectl rollout status deployment/taskflow \
+                    --timeout=180s
+                '''
+            }
+        }
     }
 }
