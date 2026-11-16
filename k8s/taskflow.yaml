@@ -1,0 +1,60 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskflow
+  template:
+    metadata:
+      labels:
+        app: taskflow
+    spec:
+      containers:
+        - name: taskflow
+          image: 928535088701.dkr.ecr.eu-north-1.amazonaws.com/taskflow:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_ENV
+              value: production
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-app-secret
+                  key: APP_KEY
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: mysql
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_DATABASE
+              value: taskflow_db
+            - name: DB_USERNAME
+              value: taskflow_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-db-secret
+                  key: MYSQL_PASSWORD
+            - name: SESSION_DRIVER
+              value: file
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskflow
+spec:
+  selector:
+    app: taskflow
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
