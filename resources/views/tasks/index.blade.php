@@ -59,9 +59,35 @@
         </section>
 
         <section class="xl:col-span-2 bg-white rounded-2xl border p-6 shadow-sm">
-            <div class="flex justify-between items-center mb-5">
+            {{-- <div class="flex justify-between items-center mb-5">
                 <h3 class="text-lg font-bold">Recent Tasks</h3>
                 <span class="text-sm text-slate-400">{{ $total }} tasks</span>
+            </div> --}}
+
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-5">
+            <h3 class="text-lg font-bold">Recent Tasks</h3>
+
+            <span class="text-sm text-slate-400">{{ $total }} tasks</span>
+
+            <form action="/" method="GET" class="flex gap-2">
+            <input
+            type="text"
+            name="search"
+            value="{{ $search }}"
+            placeholder="Search tasks..."
+            class="border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-violet-400"
+            >
+
+            <button class="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm">
+            Search
+            </button>
+
+            @if($search)
+            <a href="/" class="text-sm text-slate-500 px-2 py-2">
+                Clear
+            </a>
+            @endif
+            </form>
             </div>
 
             <div class="space-y-3">
@@ -100,12 +126,19 @@
                         </div>
                     </div>
                 </div>
+
                 @empty
                     <div class="text-center py-14 text-slate-400">
                         <p class="text-3xl mb-3">🗂️</p>
-                        <p>No tasks yet. Create your first task!</p>
+
+                        @if($search)
+                            <p>No tasks found matching "{{ $search }}"</p>
+                        @else
+                            <p>No tasks yet. Create your first task!</p>
+                        @endif
                     </div>
                 @endforelse
+
             </div>
         </section>
     </div>

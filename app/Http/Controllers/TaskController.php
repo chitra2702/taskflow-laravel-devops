@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::latest()->get();
+        $search = $request->input('search');
+
+        $tasks = Task::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->get();
 
         return view('tasks.index', [
             'tasks' => $tasks,
+            'search' => $search,
             'total' => Task::count(),
             'pending' => Task::where('status', 'Pending')->count(),
             'progress' => Task::where('status', 'In Progress')->count(),
