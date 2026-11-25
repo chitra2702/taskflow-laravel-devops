@@ -5,8 +5,8 @@ pipeline {
     environment {
         AWS_REGION = 'eu-north-1'
         AWS_ACCOUNT_ID = '928535088701'
-        ECR_REPO = 'taskflow'
-        ECR_URI = '928535088701.dkr.ecr.eu-north-1.amazonaws.com/taskflow'
+        ECR_REPO = 'laravel-ecr'
+        ECR_URI = '928535088701.dkr.ecr.eu-north-1.amazonaws.com/laravel-ecr'
     }
 
     stages {
