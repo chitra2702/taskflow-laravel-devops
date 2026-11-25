@@ -34,14 +34,29 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy Composer dependency files first
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --no-scripts
+
 # Copy Laravel application
 COPY . .
+
+# Clear stale Laravel package discovery cache
+RUN rm -f bootstrap/cache/*.php
+
+# Generate optimized autoload files and discover packages
+RUN composer dump-autoload --no-dev --optimize --no-scripts \
+    && php artisan package:discover --ansi
 
 # Copy compiled frontend assets
 COPY --from=frontend /app/public/build ./public/build
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set Laravel permissions
 RUN chown -R www-data:www-data storage bootstrap/cache

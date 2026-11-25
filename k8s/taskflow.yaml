@@ -19,6 +19,29 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+
+          livenessProbe:
+            httpGet:
+              path: /up
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /up
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
           env:
             - name: APP_ENV
               value: production
@@ -29,21 +52,40 @@ spec:
                 secretKeyRef:
                   name: taskflow-app-secret
                   key: APP_KEY
+
             - name: DB_CONNECTION
               value: mysql
+
             - name: DB_HOST
-              value: mysql
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-db-secret
+                  key: DB_HOST
+
             - name: DB_PORT
-              value: "3306"
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-db-secret
+                  key: DB_PORT
+
             - name: DB_DATABASE
-              value: taskflow_db
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-db-secret
+                  key: DB_DATABASE
+
             - name: DB_USERNAME
-              value: taskflow_user
+              valueFrom:
+                secretKeyRef:
+                  name: taskflow-db-secret
+                  key: DB_USERNAME
+
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: taskflow-db-secret
-                  key: MYSQL_PASSWORD
+                  key: DB_PASSWORD
+
             - name: SESSION_DRIVER
               value: file
 ---
