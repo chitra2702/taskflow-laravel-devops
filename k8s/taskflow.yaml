@@ -57,34 +57,22 @@ spec:
               value: mysql
 
             - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: taskflow-db-secret
-                  key: DB_HOST
+              value: mysql
 
             - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: taskflow-db-secret
-                  key: DB_PORT
+              value: "3306"
 
             - name: DB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: taskflow-db-secret
-                  key: DB_DATABASE
+              value: taskflow_db
 
             - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: taskflow-db-secret
-                  key: DB_USERNAME
+              value: taskflow_user
 
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: taskflow-db-secret
-                  key: DB_PASSWORD
+                  key: MYSQL_PASSWORD
 
             - name: SESSION_DRIVER
               value: file
